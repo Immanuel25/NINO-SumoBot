@@ -77,8 +77,8 @@ void loop() {
     }
     
     else { //buat mode setir biasa
-      speedA = map(INITIALSPEED+PS4.LStickY()+PS4.LStickX()/2, 0, 268, 0, throttle);
-      speedB = map(INITIALSPEED+PS4.LStickY()-PS4.LStickX()/2, 0, 268, 0, throttle);
+      speedA = map(INITIALSPEED+PS4.LStickY()+PS4.LStickX()/2, 0, 200, 0, throttle);
+      speedB = map(INITIALSPEED+PS4.LStickY()-PS4.LStickX()/2, 0, 200, 0, throttle);
   
       speedA = map(speedA, 0, 255, 0, MAXSPEEDA);
       speedB = map(speedB, 0, 255, 0, MAXSPEEDB);
