@@ -1,8 +1,8 @@
 #include <PS4Controller.h>
 
-int INITIALSPEED = 64;
-int MAXSPEEDA = 800;
-int MAXSPEEDB = 800;
+int MAXSPEEDA = 80; //80% duty cycle 
+int MAXSPEEDB = 80; //80% duty cycle
+int INITIALSPEED = 64; 
 int speedA = 0;
 int speedB = 0;
 int throttle = 0;
@@ -16,24 +16,24 @@ const int resolution = 10; //Resolution 8, 10, 12, 15
 #define RPWM_CH1 0
 #define RPWM_1 16 // define pin 3 for RPWM pin (output)
 #define R_EN_1 17 // define pin 2 for R_EN pin (input)
-#define R_IS_1 5 // define pin 5 for R_IS pin (output)
+#define R_IS_1 18 // define pin 5 for R_IS pin (output)
 
 #define LPWM_CH1 1
-#define LPWM_1 6 // define pin 6 for LPWM pin (output)
-#define L_EN_1 7 // define pin 7 for L_EN pin (input)
-#define L_IS_1 8 // define pin 8 for L_IS pin (output)
+#define LPWM_1 19 // define pin 6 for LPWM pin (output)
+#define L_EN_1 21 // define pin 7 for L_EN pin (input)
+#define L_IS_1 22 // define pin 8 for L_IS pin (output)
 // motor 1 pins end here
 
 // pins for motor 2
 #define RPWM_CH2 2
-#define RPWM_2 9 // define pin 9 for RPWM pin (output)
-#define R_EN_2 10 // define pin 10 for R_EN pin (input)
-#define R_IS_2 12 // define pin 12 for R_IS pin (output)
+#define RPWM_2 23 // define pin 9 for RPWM pin (output)
+#define R_EN_2 25 // define pin 10 for R_EN pin (input)
+#define R_IS_2 26 // define pin 12 for R_IS pin (output)
 
 #define LPWM_CH2 3
-#define LPWM_2 11 // define pin 11 for LPWM pin (output)
-#define L_EN_2 13 // define pin 7 for L_EN pin (input)
-#define L_IS_2 14 // define pin 8 for L_IS pin (output)
+#define LPWM_2 27 // define pin 11 for LPWM pin (output)
+#define L_EN_2 32 // define pin 7 for L_EN pin (input)
+#define L_IS_2 33 // define pin 8 for L_IS pin (output)
 // motor 2 pins end here
 
 #define CW 1 //
@@ -109,6 +109,7 @@ void loop() {
   else{
     motorB.stop();
   }
+  
   
   Serial.println(speedA);
   Serial.println(speedB);
