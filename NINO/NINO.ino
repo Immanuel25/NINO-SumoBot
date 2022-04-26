@@ -40,7 +40,7 @@ const int resolution = 10; //Resolution 8, 10, 12, 15
 #define CCW 0 //
 #define debug 1 //
 
-#include <RobojaxBTS7960.h>
+#include <RobojaxBTS7960.h> // pake library
 RobojaxBTS7960 motorA(R_EN_1,RPWM_CH1,R_IS_1, L_EN_1,LPWM_CH1,L_IS_1,debug);//define motor 1 object
 RobojaxBTS7960 motorB(R_EN_2,RPWM_CH2,R_IS_2, L_EN_2,LPWM_CH2,L_IS_2,debug);//define motor 2 object and the same way for other motors
 
