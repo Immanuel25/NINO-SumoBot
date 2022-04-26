@@ -1,7 +1,7 @@
 #include <PS4Controller.h>
 
-int MAXSPEEDA = 80; //80% duty cycle 
-int MAXSPEEDB = 80; //80% duty cycle
+int MAXSPEEDA = 800; // 800/1023 x100% duty cycle 
+int MAXSPEEDB = 800; // 800/1023 x100% duty cycle
 int INITIALSPEED = 64; 
 int speedA = 0;
 int speedB = 0;
@@ -12,38 +12,33 @@ bool majuB = true;
 const int freq = 5000;
 const int resolution = 10; //Resolution 8, 10, 12, 15
 
-// pins for motor 1
-#define RPWM_CH1 0
-#define RPWM_1 16 // define pin 3 for RPWM pin (output)
-#define R_EN_1 17 // define pin 2 for R_EN pin (input)
-#define R_IS_1 18 // define pin 5 for R_IS pin (output)
+// pins for motor A
+#define RPWM_CHA 0 // CHANNEL PWM FORWARD MOTOR A
+#define RPWM_A 35 // GPIO18 (D18)
+#define R_EN_A 38 // GPIO19 (D19)
+#define R_IS_A 25 // GPIO16 (RX2)
 
-#define LPWM_CH1 1
-#define LPWM_1 19 // define pin 6 for LPWM pin (output)
-#define L_EN_1 21 // define pin 7 for L_EN pin (input)
-#define L_IS_1 22 // define pin 8 for L_IS pin (output)
-// motor 1 pins end here
+#define LPWM_CHA 1 // CHANNEL PWM REVERSE MOTOR A
+#define LPWM_A 42 // GPIO21 (D21)
+#define L_EN_A 14 // GPIO25 (D25)
+#define L_IS_A 27 // GPIO17 (TX2)
+// motor A pins end here
 
-// pins for motor 2
-#define RPWM_CH2 2
-#define RPWM_2 23 // define pin 9 for RPWM pin (output)
-#define R_EN_2 25 // define pin 10 for R_EN pin (input)
-#define R_IS_2 26 // define pin 12 for R_IS pin (output)
+// pins for motor B
+#define RPWM_CHB 2 // CHANNEL PWM FORWARD MOTOR B
+#define RPWM_B 15 // GPIO26 (D26)
+#define R_EN_B 16 // GPIO27 (D27)
+#define R_IS_B 39 // GPIO22 (D22)
 
-#define LPWM_CH2 3
-#define LPWM_2 27 // define pin 11 for LPWM pin (output)
-#define L_EN_2 32 // define pin 7 for L_EN pin (input)
-#define L_IS_2 33 // define pin 8 for L_IS pin (output)
-// motor 2 pins end here
+#define LPWM_CHB 3 // CHANNEL PWM REVERSE MOTOR B
+#define LPWM_B 12 // GPIO32 (D32)
+#define L_EN_B 13 // GPIO33 (D33)
+#define L_IS_B 36 // GPIO23 (D23)
+// motor B pins end here
 
 #define CW 1 //
 #define CCW 0 //
 #define debug 1 //
-
-#include <RobojaxBTS7960.h> // pake library
-RobojaxBTS7960 motorA(R_EN_1,RPWM_CH1,R_IS_1, L_EN_1,LPWM_CH1,L_IS_1,debug);//define motor 1 object
-RobojaxBTS7960 motorB(R_EN_2,RPWM_CH2,R_IS_2, L_EN_2,LPWM_CH2,L_IS_2,debug);//define motor 2 object and the same way for other motors
-
 
 
 void setup() { 
@@ -51,20 +46,34 @@ void setup() {
   PS4.begin("40:99:22:d3:2e:ac");
   Serial.println("Ready.");
 
-  ledcSetup(RPWM_CH1, freq, resolution);
-  ledcAttachPin(RPWM_1, RPWM_CH1);
-
-  ledcSetup(LPWM_CH1, freq, resolution);
-  ledcAttachPin(LPWM_1, LPWM_CH1);
-
-  ledcSetup(RPWM_CH2, freq, resolution);
-  ledcAttachPin(RPWM_2, RPWM_CH2);
+  // Buat PWM
+  ledcSetup(RPWM_CHA, freq, resolution);
+  ledcAttachPin(RPWM_A, RPWM_CHA);
   
-  ledcSetup(LPWM_CH2, freq, resolution);
-  ledcAttachPin(LPWM_2, LPWM_CH2);
+  ledcSetup(LPWM_CHA, freq, resolution);
+  ledcAttachPin(LPWM_A, LPWM_CHA);
   
-  motorA.begin();
-  motorB.begin();
+  ledcSetup(RPWM_CHB, freq, resolution);
+  ledcAttachPin(RPWM_B, RPWM_CHB);
+  
+  ledcSetup(LPWM_CHB, freq, resolution);
+  ledcAttachPin(LPWM_B, LPWM_CHB);
+
+  pinMode(R_EN_A, OUTPUT); // pin EN bisa dibuang (langsung hubung ke Vcc)
+  digitalWrite(R_EN_A, HIGH); // biar motor A bisa CW
+  pinMode(R_IS_A, INPUT_PULLUP); // ngasih tau berapa arus ngalir
+  
+  pinMode(L_EN_A, OUTPUT);
+  digitalWrite(L_EN_A, HIGH); // biar motor A bisa CCW
+  pinMode(L_IS_A, INPUT_PULLUP);  
+
+  pinMode(R_EN_B, OUTPUT);
+  digitalWrite(R_EN_B, HIGH); // biar motor B bisa CW
+  pinMode(R_IS_B, INPUT_PULLUP);  
+  
+  pinMode(L_EN_B, OUTPUT);
+  digitalWrite(L_EN_B, HIGH); // biar motor B bisa CCW
+  pinMode(L_IS_B, INPUT_PULLUP);  
 }
 
 void loop() {
@@ -90,31 +99,41 @@ void loop() {
   delay(100);
   }
   
-  if (speedA>20){
-    motorA.rotate(speedA, CCW);
+  if (speedA>20){ // motor A CW
+    ledcWrite(LPWM_CHA, 0);
+    ledcWrite(RPWM_CHA, speedA);
   }
-  else if (speedA<-20){
-    motorA.rotate(-speedA, CW);
+  else if (speedA<-20){ // motor A CCW
+    ledcWrite(RPWM_CHA, 0);
+    ledcWrite(LPWM_CHA, -speedA);
   }
-  else{
-    motorA.stop();
-  }
-  
-  if (speedB>20){
-    motorB.rotate(speedB, CW);
-  }
-  else if (speedB<-20){
-    motorB.rotate(-speedB, CCW);
-  }
-  else{
-    motorB.stop();
+  else{ // motor A berenti
+    ledcWrite(RPWM_CHA, 0);
+    ledcWrite(LPWM_CHA, 0);
   }
   
+  if (speedB>20){ // motor B CCW
+    ledcWrite(RPWM_CHB, 0);
+    ledcWrite(LPWM_CHB, speedB);
+  }
+  else if (speedB<-20){ // motor B CW
+    ledcWrite(LPWM_CHB, 0);
+    ledcWrite(RPWM_CHB, -speedB);
+  }
+  else{ // motor B berenti
+    ledcWrite(RPWM_CHB, 0);
+    ledcWrite(LPWM_CHB, 0);
+  }
   
-  Serial.println(speedA);
-  Serial.println(speedB);
-  Serial.println("");
-  delay(100);
+  if (debug==1){
+    Serial.print("speedA: ");
+    Serial.print(speedA);
+    Serial.print(" speedB: ");
+    Serial.println(speedB);
+    Serial.println("");
+    delay(100);
+  }
+  
 }
 
 
