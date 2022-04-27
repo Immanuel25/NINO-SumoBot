@@ -3,6 +3,7 @@
 // FITUR YANG KURANG
 // 1. Sirine dan lampu ambulans
 // 2. Baca arus dari bts7960
+// 3. COMBO MOVE (LMAO)
 
 int MAXSPEEDA = 800; // 800/1023 x100% duty cycle 
 int MAXSPEEDB = 800; // 800/1023 x100% duty cycle

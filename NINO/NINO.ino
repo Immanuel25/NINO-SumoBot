@@ -14,26 +14,26 @@ const int resolution = 10; //Resolution 8, 10, 12, 15
 
 // pins for motor A
 #define RPWM_CHA 0 // CHANNEL PWM FORWARD MOTOR A
-#define RPWM_A 35 // GPIO18 (D18)
-#define R_EN_A 38 // GPIO19 (D19)
-#define R_IS_A 25 // GPIO16 (RX2)
+#define RPWM_A 18 // GPIO18 (D18)
+#define R_EN_A 19 // GPIO19 (D19)
+#define R_IS_A 16 // GPIO16 (RX2)
 
 #define LPWM_CHA 1 // CHANNEL PWM REVERSE MOTOR A
-#define LPWM_A 42 // GPIO21 (D21)
-#define L_EN_A 14 // GPIO25 (D25)
-#define L_IS_A 27 // GPIO17 (TX2)
+#define LPWM_A 21 // GPIO21 (D21)
+#define L_EN_A 25 // GPIO25 (D25)
+#define L_IS_A 17 // GPIO17 (TX2)
 // motor A pins end here
 
 // pins for motor B
 #define RPWM_CHB 2 // CHANNEL PWM FORWARD MOTOR B
-#define RPWM_B 15 // GPIO26 (D26)
-#define R_EN_B 16 // GPIO27 (D27)
-#define R_IS_B 39 // GPIO22 (D22)
+#define RPWM_B 26 // GPIO26 (D26)
+#define R_EN_B 27 // GPIO27 (D27)
+#define R_IS_B 22 // GPIO22 (D22)
 
 #define LPWM_CHB 3 // CHANNEL PWM REVERSE MOTOR B
-#define LPWM_B 12 // GPIO32 (D32)
-#define L_EN_B 13 // GPIO33 (D33)
-#define L_IS_B 36 // GPIO23 (D23)
+#define LPWM_B 32 // GPIO32 (D32)
+#define L_EN_B 33 // GPIO33 (D33)
+#define L_IS_B 23 // GPIO23 (D23)
 // motor B pins end here
 
 #define CW 1 //
@@ -108,6 +108,7 @@ void loop() {
     ledcWrite(LPWM_CHA, -speedA);
   }
   else{ // motor A berenti
+    speedA=0;
     ledcWrite(RPWM_CHA, 0);
     ledcWrite(LPWM_CHA, 0);
   }
@@ -121,6 +122,7 @@ void loop() {
     ledcWrite(RPWM_CHB, -speedB);
   }
   else{ // motor B berenti
+    speedB=0;
     ledcWrite(RPWM_CHB, 0);
     ledcWrite(LPWM_CHB, 0);
   }
