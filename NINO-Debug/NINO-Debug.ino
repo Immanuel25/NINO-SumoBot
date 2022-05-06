@@ -1,10 +1,5 @@
 #include <PS4Controller.h>
 
-// FITUR YANG KURANG
-// 1. Sirine dan lampu ambulans
-// 2. Baca arus dari bts7960
-// 3. COMBO MOVE (LMAO)
-
 int MAXSPEEDA = 800; // 800/1023 x100% duty cycle 
 int MAXSPEEDB = 800; // 800/1023 x100% duty cycle
 int INITIALSPEED = 64; 
@@ -17,28 +12,28 @@ bool majuB = true;
 const int freq = 5000;
 const int resolution = 10; //Resolution 8, 10, 12, 15
 
-#define pinMerah 23 // GPIO23 (D23)
-#define pinBiru 22 // GPIO22 (D23)
-#define pinBuzzer 18 // GPIO18 (D18)
-
 // pins for motor A
 #define RPWM_CHA 0 // CHANNEL PWM FORWARD MOTOR A
-#define RPWM_A 35 // GPIO17 (D18)
-#define R_IS_A 25 // GPIO15 (RX2)
+#define RPWM_A 18 // GPIO18 (D18)
+#define R_EN_A 19 // GPIO19 (D19)
+#define R_IS_A 16 // GPIO16 (RX2)
 
 #define LPWM_CHA 1 // CHANNEL PWM REVERSE MOTOR A
-#define LPWM_A 42 // GPIO16 (D21)
-#define L_IS_A 27 // GPIO2 (TX2)
+#define LPWM_A 21 // GPIO21 (D21)
+#define L_EN_A 25 // GPIO25 (D25)
+#define L_IS_A 17 // GPIO17 (TX2)
 // motor A pins end here
 
 // pins for motor B
 #define RPWM_CHB 2 // CHANNEL PWM FORWARD MOTOR B
 #define RPWM_B 26 // GPIO26 (D26)
-#define R_IS_B 12 // GPIO12 (D12)
+#define R_EN_B 27 // GPIO27 (D27)
+#define R_IS_B 22 // GPIO22 (D22)
 
 #define LPWM_CHB 3 // CHANNEL PWM REVERSE MOTOR B
-#define LPWM_B 27 // GPIO27 (D27)
-#define L_IS_B 14 // GPIO14 (D14)
+#define LPWM_B 32 // GPIO32 (D32)
+#define L_EN_B 33 // GPIO33 (D33)
+#define L_IS_B 23 // GPIO23 (D23)
 // motor B pins end here
 
 #define CW 1 //
@@ -64,10 +59,21 @@ void setup() {
   ledcSetup(LPWM_CHB, freq, resolution);
   ledcAttachPin(LPWM_B, LPWM_CHB);
 
-  pinMode(R_IS_A, INPUT); // ngasih tau berapa arus ngalir
-  pinMode(L_IS_A, INPUT); 
-  pinMode(R_IS_B, INPUT);  
-  pinMode(L_IS_B, INPUT);  
+  pinMode(R_EN_A, OUTPUT); // pin EN bisa dibuang (langsung hubung ke Vcc)
+  digitalWrite(R_EN_A, HIGH); // biar motor A bisa CW
+  pinMode(R_IS_A, INPUT_PULLUP); // ngasih tau berapa arus ngalir
+  
+  pinMode(L_EN_A, OUTPUT);
+  digitalWrite(L_EN_A, HIGH); // biar motor A bisa CCW
+  pinMode(L_IS_A, INPUT_PULLUP);  
+
+  pinMode(R_EN_B, OUTPUT);
+  digitalWrite(R_EN_B, HIGH); // biar motor B bisa CW
+  pinMode(R_IS_B, INPUT_PULLUP);  
+  
+  pinMode(L_EN_B, OUTPUT);
+  digitalWrite(L_EN_B, HIGH); // biar motor B bisa CCW
+  pinMode(L_IS_B, INPUT_PULLUP);  
 }
 
 void loop() {
@@ -102,6 +108,7 @@ void loop() {
     ledcWrite(LPWM_CHA, -speedA);
   }
   else{ // motor A berenti
+    speedA=0;
     ledcWrite(RPWM_CHA, 0);
     ledcWrite(LPWM_CHA, 0);
   }
@@ -115,6 +122,7 @@ void loop() {
     ledcWrite(RPWM_CHB, -speedB);
   }
   else{ // motor B berenti
+    speedB=0;
     ledcWrite(RPWM_CHB, 0);
     ledcWrite(LPWM_CHB, 0);
   }
