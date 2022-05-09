@@ -23,12 +23,12 @@ const int resolution = 10; //Resolution 8, 10, 12, 15
 
 // pins for motor A
 #define RPWM_CHA 0 // CHANNEL PWM FORWARD MOTOR A
-#define RPWM_A 35 // GPIO17 (D18)
-#define R_IS_A 25 // GPIO15 (RX2)
+#define RPWM_A 17 // GPIO17 (D17)
+#define R_IS_A 15 // GPIO15 (D15)
 
 #define LPWM_CHA 1 // CHANNEL PWM REVERSE MOTOR A
-#define LPWM_A 42 // GPIO16 (D21)
-#define L_IS_A 27 // GPIO2 (TX2)
+#define LPWM_A 16 // GPIO16 (D16)
+#define L_IS_A 2 // GPIO2 (D2)
 // motor A pins end here
 
 // pins for motor B
